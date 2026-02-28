@@ -33,6 +33,17 @@
             cursor:pointer;
         }
         button:hover { background:#0056b3; }
+        .secondary-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .secondary-btn:hover { background: #5a6268; }
         .error { color:red; margin-top:10px; }
     </style>
 </head>
@@ -79,6 +90,9 @@
         <input type="password" name="confirm_password" required>
 
         <button type="submit">S'inscrire</button>
+        <div style="text-align: center;">
+            <a href="index.php?url=login" class="secondary-btn">Deja inscrit ? Se connecter</a>
+        </div>
 
     </form>
 </div>
