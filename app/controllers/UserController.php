@@ -27,13 +27,13 @@ class UserController {
 
             if($data['password']!==$_POST['confirm_password']) {
                 $errors[]="Les mots de passe ne correspondent pas";
-                require __DIR__ . '/../views/users/register.php';
+                require '../app/views/users/register.php';
                 return;
             }
 
             if($this->userModel->findByEmail($data['email'])) {
                 $errors[]="Email déjà utilisé";
-                require __DIR__ . '/../views/users/register.php';
+                require '../app/views/users/register.php';
                 return;
             }
 
@@ -59,51 +59,43 @@ class UserController {
 
                 session_regenerate_id(true);
 
-                $_SESSION['id_user']=$user['id'];
-
-                if(!headers_sent()) {
-                    header("Location: index.php?url=profile");
-                    exit;
-                } else {
-                    // Fallback: use JavaScript and meta refresh if headers already sent
-                    echo '<script>window.location.href="index.php?url=profile";</script>';
-                    echo '<noscript><meta http-equiv="refresh" content="0;url=index.php?url=profile"></noscript>';
-                    exit;
-                }
+                $_SESSION['user_id']=$user['id'];
+                header("Location: index.php?url=profile");
+                exit;
             }
 
             $errors[]="Informations incorrectes";
-            require __DIR__ . '/../views/users/login.php';
+            require '../app/views/users/login.php';
         }
     }
 
     public function profile() {
 
-        if(!isset($_SESSION['id_user'])) {
+        if(!isset($_SESSION['user_id'])) {
             header("Location: index.php?url=login");
             exit;
         }
 
-        $user=$this->userModel->findById($_SESSION['id_user']);
-        require __DIR__ . '/../views/users/profile.php';
+        $user=$this->userModel->findById($_SESSION['user_id']);
+        require '../app/views/users/profile.php';
     }
 
     public function edit() {
 
-        if(!isset($_SESSION['id_user'])) {
+        if(!isset($_SESSION['user_id'])) {
             header("Location: index.php?url=login");
             exit;
         }
 
-        $user=$this->userModel->findById($_SESSION['id_user']);
-        require __DIR__ . '/../views/users/edit.php';
+        $user=$this->userModel->findById($_SESSION['user_id']);
+        require '../app/views/users/edit.php';
     }
 
     public function update() {
 
         if($_POST['csrf_token']!==$_SESSION['csrf_token']) die("CSRF Error");
 
-        $this->userModel->update($_SESSION['id_user'],[
+        $this->userModel->update($_SESSION['user_id'],[
             'nom'=>trim($_POST['nom']),
             'prenom'=>trim($_POST['prenom']),
             'email'=>trim($_POST['email']),
@@ -116,7 +108,7 @@ class UserController {
     }
 
     public function delete() {
-        $this->userModel->delete($_SESSION['id_user']);
+        $this->userModel->delete($_SESSION['user_id']);
         session_destroy();
         header("Location: index.php?url=register");
     }
