@@ -10,16 +10,16 @@ class VoteController {
         $this->vote = new Vote($db);
     }
 
-    public function vote($id_user, $id_sub){
+    public function vote($user_id, $submission_id){
 
         // check if user already voted
-        if($this->vote->checkUserVote($id_user, $id_sub) > 0){
+        if($this->vote->checkUserVote($user_id, $submission_id) > 0){
             echo "You already voted";
             return;
         }
 
         // add vote
-        if($this->vote->addVote($id_user, $id_sub)){
+        if($this->vote->addVote($user_id, $submission_id)){
             echo "Vote added successfully";
         } else {
             echo "Error voting";

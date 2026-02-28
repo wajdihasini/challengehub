@@ -5,8 +5,10 @@ session_start();
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../app/controllers/VoteController.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['id_user'])) {
+// Check if user is logged in (support both common session variable names)
+$sessionUserId = $_SESSION['id_user'] ?? $_SESSION['user_id'] ?? null;
+
+if ($sessionUserId === null) {
     header("Location: login.php");
     exit;
 }
@@ -21,10 +23,12 @@ $db = $database->getConnection();
 
 $controller = new VoteController($db);
 
-$user_id = $_SESSION['id_user'];   // from users table
-$submission_id = $_POST['id_sub']; // from submissions table
+$user_id = $sessionUserId;
+$submission_id = (int)$_POST['id_sub'];
 
 $controller->vote($user_id, $submission_id);
 
-header("Location: submissions.php");
+// Redirect back to the referring page or index
+$redirect = $_SERVER['HTTP_REFERER'] ?? 'index.php';
+header("Location: " . $redirect);
 exit;

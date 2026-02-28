@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-// Activer le buffering des sorties pour permettre les redirections header() même
-// si du contenu a été envoyé accidentellement avant l'appel à header().
-ob_start();
-
 if(empty($_SESSION['csrf_token']))
     $_SESSION['csrf_token']=bin2hex(random_bytes(32));
 

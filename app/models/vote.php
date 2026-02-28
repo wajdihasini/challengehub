@@ -9,44 +9,44 @@ class Vote {
         $this->conn = $db;
     }
 
-    public function addVote($id_user, $id_sub){
+    public function addVote($user_id, $submission_id){
 
-        $query = "INSERT INTO " . $this->table . " (id_user, id_sub)
-                  VALUES (:id_user, :id_sub)";
+        $query = "INSERT INTO " . $this->table . " (user_id, submission_id)
+                  VALUES (:user_id, :submission_id)";
 
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':id_user', $id_user);
-        $stmt->bindParam(':id_sub', $id_sub);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':submission_id', $submission_id);
 
         return $stmt->execute();
     }
 
-    public function checkUserVote($id_user, $id_sub){
+    public function checkUserVote($user_id, $submission_id){
 
         $query = "SELECT * FROM " . $this->table . "
-                  WHERE id_user = :id_user 
-                  AND id_sub = :id_sub";
+                  WHERE user_id = :user_id 
+                  AND submission_id = :submission_id";
 
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':id_user', $id_user);
-        $stmt->bindParam(':id_sub', $id_sub);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':submission_id', $submission_id);
 
         $stmt->execute();
 
         return $stmt->rowCount();
     }
 
-    public function countVotes($id_sub){
+    public function countVotes($submission_id){
 
         $query = "SELECT COUNT(*) as total 
                   FROM " . $this->table . "
-                  WHERE id_sub = :id_sub";
+                  WHERE submission_id = :submission_id";
 
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':id_sub', $id_sub);
+        $stmt->bindParam(':submission_id', $submission_id);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
